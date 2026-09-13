@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+  </head>
+  <body>
+    <main>
+      <p><a href="/">Back to all posts</a></p>
+      <h1>Edit post</h1>
+
+      <% if (error) { %>
+        <p role="alert"><%= error %></p>
+      <% } %>
+
+      <form action="/posts/<%= post.id %>/edit" method="post">
+        <div>
+          <label for="author">Your name</label>
+          <input id="author" name="author" type="text" value="<%= post.author || '' %>" required>
+        </div>
+
+        <div>
+          <label for="title">Title</label>
+          <input id="title" name="title" type="text" value="<%= post.title || '' %>" required>
+        </div>
+
+        <div>
+          <label for="content">Blog content</label>
+          <textarea id="content" name="content" rows="8" required><%= post.content || '' %></textarea>
+        </div>
+
+        <button type="submit">Save changes</button>
+      </form>
+    </main>
+  </body>
+</html>

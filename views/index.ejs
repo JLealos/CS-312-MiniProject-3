@@ -8,7 +8,54 @@
   <body>
     <main>
       <h1><%= pageTitle %></h1>
-      <p>The Express server and EJS view engine are connected.</p>
+
+      <section aria-labelledby="create-post-heading">
+        <h2 id="create-post-heading">Create a post</h2>
+
+        <% if (error) { %>
+          <p role="alert"><%= error %></p>
+        <% } %>
+
+        <form action="/posts" method="post">
+          <div>
+            <label for="author">Your name</label>
+            <input id="author" name="author" type="text" value="<%= formData.author || '' %>" required>
+          </div>
+
+          <div>
+            <label for="title">Title</label>
+            <input id="title" name="title" type="text" value="<%= formData.title || '' %>" required>
+          </div>
+
+          <div>
+            <label for="content">Blog content</label>
+            <textarea id="content" name="content" rows="8" required><%= formData.content || '' %></textarea>
+          </div>
+
+          <button type="submit">Publish post</button>
+        </form>
+      </section>
+
+      <section aria-labelledby="posts-heading">
+        <h2 id="posts-heading">Published posts</h2>
+
+        <% if (posts.length === 0) { %>
+          <p>No posts yet. Create the first one above.</p>
+        <% } %>
+
+        <% posts.forEach((post) => { %>
+          <article>
+            <h3><%= post.title %></h3>
+            <p>By <%= post.author %> on <%= post.createdAt.toLocaleString() %></p>
+            <p><%= post.content %></p>
+
+            <a href="/posts/<%= post.id %>/edit">Edit</a>
+            <form action="/posts/<%= post.id %>/delete" method="post">
+              <button type="submit">Delete</button>
+            </form>
+          </article>
+        <% }) %>
+      </section>
     </main>
   </body>
 </html>
