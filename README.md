@@ -8,8 +8,9 @@ A locally run blog web application built with Node.js, Express.js, and EJS.
 2. Add the Express server and initial routes.
 3. Create the EJS layout and blog pages.
 4. Add in-memory post creation, viewing, editing, and deletion.
-5. Add responsive styling and optional post categories.
-6. Test the application across the main user workflows.
+5. Add tags, filtering, sorting, and post reactions.
+6. Add responsive styling.
+7. Test the application across the main user workflows.
 
 ## Development commands
 

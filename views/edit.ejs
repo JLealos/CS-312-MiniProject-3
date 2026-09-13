@@ -26,6 +26,11 @@
         </div>
 
         <div>
+          <label for="tags">Tags</label>
+          <input id="tags" name="tags" type="text" value="<%= post.tagsInput || post.tags.join(', ') %>" placeholder="technology, learning">
+        </div>
+
+        <div>
           <label for="content">Blog content</label>
           <textarea id="content" name="content" rows="8" required><%= post.content || '' %></textarea>
         </div>

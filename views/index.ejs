@@ -28,6 +28,11 @@
           </div>
 
           <div>
+            <label for="tags">Tags</label>
+            <input id="tags" name="tags" type="text" value="<%= formData.tags || '' %>" placeholder="technology, learning">
+          </div>
+
+          <div>
             <label for="content">Blog content</label>
             <textarea id="content" name="content" rows="8" required><%= formData.content || '' %></textarea>
           </div>
@@ -39,15 +44,41 @@
       <section aria-labelledby="posts-heading">
         <h2 id="posts-heading">Published posts</h2>
 
+        <form action="/" method="get">
+          <label for="tag-filter">Filter by tag</label>
+          <select id="tag-filter" name="tag">
+            <option value="">All tags</option>
+            <% availableTags.forEach((tag) => { %>
+              <option value="<%= tag %>" <%= selectedTag === tag ? 'selected' : '' %>><%= tag %></option>
+            <% }) %>
+          </select>
+
+          <label for="sort-order">Sort by date</label>
+          <select id="sort-order" name="sort">
+            <option value="newest" <%= sortOrder === 'newest' ? 'selected' : '' %>>Newest first</option>
+            <option value="oldest" <%= sortOrder === 'oldest' ? 'selected' : '' %>>Oldest first</option>
+          </select>
+
+          <button type="submit">Apply filters</button>
+        </form>
+
         <% if (posts.length === 0) { %>
-          <p>No posts yet. Create the first one above.</p>
+          <p><%= selectedTag ? `No posts found with the tag "${selectedTag}".` : 'No posts yet. Create the first one above.' %></p>
         <% } %>
 
         <% posts.forEach((post) => { %>
           <article>
             <h3><%= post.title %></h3>
             <p>By <%= post.author %> on <%= post.createdAt.toLocaleString() %></p>
+            <% if (post.tags.length > 0) { %>
+              <p>Tags: <%= post.tags.join(', ') %></p>
+            <% } %>
             <p><%= post.content %></p>
+
+            <form action="/posts/<%= post.id %>/react" method="post">
+              <button type="submit" name="reaction" value="like">Like (<%= post.likes %>)</button>
+              <button type="submit" name="reaction" value="dislike">Dislike (<%= post.dislikes %>)</button>
+            </form>
 
             <a href="/posts/<%= post.id %>/edit">Edit</a>
             <form action="/posts/<%= post.id %>/delete" method="post">
