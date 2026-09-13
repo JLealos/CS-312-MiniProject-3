@@ -1,0 +1,30 @@
+/* Bootstrap handles the layout, these  only provide the project theming. */
+body {
+  background: #fbf5ec;
+}
+
+.intro {
+  background: #e6d4b9;
+}
+
+.intro h1 {
+  max-width: 700px;
+}
+
+.post-card {
+  border-color: #e2d3c2;
+}
+
+.post-content {
+  white-space: pre-wrap;
+}
+
+.post-card:hover {
+  border-color: #cba984;
+}
+
+@media (max-width: 576px) {
+  .intro h1 {
+    font-size: 2rem;
+  }
+}

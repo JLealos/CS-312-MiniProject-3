@@ -8,6 +8,7 @@ const posts = [];
 let nextPostId = 1;
 
 function parseTags(tagsInput) {
+  // Store tags consistently so filtering is case-insensitive and duplicates are removed.
   return [...new Set(
     (tagsInput || '')
       .split(',')
@@ -17,6 +18,7 @@ function parseTags(tagsInput) {
 }
 
 function getPostViewData(query = {}) {
+  // Filter and sort first, then paginate the result so every view has the same rules.
   const selectedTag = typeof query.tag === 'string' ? query.tag.trim().toLowerCase() : '';
   const sortOrder = query.sort === 'oldest' ? 'oldest' : 'newest';
   const filteredPosts = posts
@@ -26,8 +28,24 @@ function getPostViewData(query = {}) {
       return sortOrder === 'oldest' ? difference : -difference;
     });
   const availableTags = [...new Set(posts.flatMap((post) => post.tags))].sort();
+  const pageSize = 5;
+  const requestedPage = Number.parseInt(query.page, 10);
+  const pageCount = Math.max(1, Math.ceil(filteredPosts.length / pageSize));
+  const currentPage = Math.min(
+    Math.max(Number.isNaN(requestedPage) ? 1 : requestedPage, 1),
+    pageCount,
+  );
+  const startIndex = (currentPage - 1) * pageSize;
 
-  return { filteredPosts, availableTags, selectedTag, sortOrder };
+  return {
+    posts: filteredPosts.slice(startIndex, startIndex + pageSize),
+    totalPosts: filteredPosts.length,
+    availableTags,
+    selectedTag,
+    sortOrder,
+    currentPage,
+    pageCount,
+  };
 }
 
 app.set('view engine', 'ejs');
@@ -36,15 +54,13 @@ app.set('views', path.join(__dirname, '..', 'views'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+// The homepage handles the main post workflow; individual edit pages keep updates simple.
 app.get('/', (request, response) => {
-  const { filteredPosts, availableTags, selectedTag, sortOrder } = getPostViewData(request.query);
+  const viewData = getPostViewData(request.query);
 
   response.render('index', {
     pageTitle: 'Local Blog',
-    posts: filteredPosts,
-    availableTags,
-    selectedTag,
-    sortOrder,
+    ...viewData,
     formData: {},
     error: null,
   });
@@ -60,11 +76,15 @@ app.post('/posts', (request, response) => {
       availableTags: [...new Set(posts.flatMap((post) => post.tags))].sort(),
       selectedTag: '',
       sortOrder: 'newest',
+      totalPosts: posts.length,
+      currentPage: 1,
+      pageCount: 1,
       formData: request.body,
       error: 'Please enter your name, title, and blog content.',
     });
   }
 
+  // New posts appear first, while the timestamp records when they were created.
   posts.unshift({
     id: nextPostId++,
     author: author.trim(),
@@ -126,6 +146,7 @@ app.post('/posts/:id/react', (request, response) => {
     return response.status(404).send('Post not found.');
   }
 
+  // Reactions are deliberately simple counters. for this local account-free app it is difficult and unnecessary to implement user-specific reactions.
   if (request.body.reaction === 'like') {
     post.likes += 1;
   } else if (request.body.reaction === 'dislike') {
