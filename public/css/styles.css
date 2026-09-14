@@ -23,6 +23,19 @@ body {
   border-color: #cba984;
 }
 
+.new-entry-button {
+  background: #8a6847;
+  border-color: #8a6847;
+  color: #fff;
+}
+
+.new-entry-button:hover,
+.new-entry-button:focus-visible {
+  background: #6f5238;
+  border-color: #6f5238;
+  color: #fff;
+}
+
 @media (max-width: 576px) {
   .intro h1 {
     font-size: 2rem;
