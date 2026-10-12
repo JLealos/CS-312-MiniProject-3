@@ -1,4 +1,4 @@
-/* Bootstrap handles the layout, these  only provide the project theming. */
+/* Bootstrap handles layout; these rules add the theme. */
 body {
   background: #fbf5ec;
 }
@@ -17,6 +17,28 @@ body {
 
 .post-content {
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.card-title,
+.navbar-brand,
+.navbar .text-secondary,
+.post-meta {
+  overflow-wrap: anywhere;
+}
+
+.badge {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.auth-page {
+  max-width: 520px;
+}
+
+.pagination {
+  flex-wrap: wrap;
 }
 
 .post-card:hover {
